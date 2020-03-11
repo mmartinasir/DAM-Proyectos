@@ -34,11 +34,12 @@ public class CrossWord {
 		this.size.height = read.nextInt();
 		this.size.width = read.nextInt();
 		this.grid = new char[this.size.height][this.size.width];
-
+		
 		// Empezamos a reyenar el grid
+		read.nextLine();
 		for (int i = 0; i < this.size.height; i++) {
 			for (int j = 0; j < this.size.width; j++) {
-				letter = read.next();
+				letter = read.nextLine();
 				this.grid[i][j] = letter.charAt(0);
 			}
 		}
@@ -50,6 +51,7 @@ public class CrossWord {
 		int x = 0;
 		int y = 0;
 		boolean endLoop = false;
+		boolean noWord = false;
 
 		while (!endLoop) {
 			// Comprobamos si la primera letra de la palabra coincide con la letra en la
@@ -59,20 +61,98 @@ public class CrossWord {
 
 				// West
 				if (y - word.length() >= 0) {
-					
+					if (west(word,x,y)) {
+						result.x = x;
+						result.y = y;
+						endLoop = true;
+					}
 				} else {
 					// NorthWest
-
+					if (x - word.length() >= 0 && y - word.length() >= 0) {
+						if (west(word,x,y)) {
+							result.x = x;
+							result.y = y;
+							endLoop = true;
+						}
+					}
+					else {
+						//North
+						if (x - word.length() >= 0) {
+							if (west(word,x,y)) {
+								result.x = x;
+								result.y = y;
+								endLoop = true;
+							}
+						} else {
+							//NorthEast
+							if (x - word.length() >= 0 && y + word.length() <= this.size.width) {
+								if (west(word,x,y)) {
+									result.x = x;
+									result.y = y;
+									endLoop = true;
+								}
+							} else {
+								//East
+								if (y + word.length() <= this.size.width) {
+									if (west(word,x,y)) {
+										result.x = x;
+										result.y = y;
+										endLoop = true;
+									}
+								} else {
+									//SouthEast
+									if (x + word.length() >= this.size.height && y + word.length() <= this.size.width) {
+										if (west(word,x,y)) {
+											result.x = x;
+											result.y = y;
+											endLoop = true;
+										}
+									} else {
+										//South
+										if (x + word.length() <= this.size.height) {
+											if (west(word,x,y)) {
+												result.x = x;
+												result.y = y;
+												endLoop = true;
+											}
+										}
+									}
+								}
+							}
+						}
+					}
 				}
+				
 			}
+			if (x < this.size.height && y < this.size.width) {
+				if (y == this.size.width) {
+					x++;
+					y = 0;
+				} else {
+					y++;
+				}
+			} else {
+				endLoop = true;
+				noWord = true;
+			}
+		}
+		if (!noWord) {
+			return result;
+		} else {
+			result.x = -1;
+			result.y = -1;
+			return result;
 		}
 	}
 
 	private boolean west(String word, int h, int w) {
-		String aux = "";
-		aux = aux + grid[h][w - 1];
+		String aux = ""+word.charAt(0);
+		
+		for (int i = 0; i < word.length(); i++) {
+			aux = aux + grid[h][w - 1];
+		}
 
-		if (aux == word) {
+		if (aux.equals(word)) {
 			return true;
 		} else {
 			return false;
@@ -80,10 +160,13 @@ public class CrossWord {
 	}
 
 	private boolean northWest(String word, int h, int w) {
-		String aux = "";
-		aux = aux + grid[h][w - 1];
+		String aux = ""+word.charAt(0);
+		
+		for (int i = 0; i < word.length(); i++) {
+			aux = aux + grid[h - 1][w - 1];
+		}
 
-		if (aux == word) {
+		if (aux.equals(word)) {
 			return true;
 		} else {
 			return false;
@@ -91,10 +174,13 @@ public class CrossWord {
 	}
 
 	private boolean north(String word, int h, int w) {
-		String aux = "";
-		aux = aux + grid[h][w - 1];
+		String aux = ""+word.charAt(0);
+		
+		for (int i = 0; i < word.length(); i++) {
+			aux = aux + grid[h - 1][w];
+		}
 
-		if (aux == word) {
+		if (aux.equals(word)) {
 			return true;
 		} else {
 			return false;
@@ -102,10 +188,13 @@ public class CrossWord {
 	}
 
 	private boolean northEast(String word, int h, int w) {
-		String aux = "";
-		aux = aux + grid[h][w - 1];
+		String aux = ""+word.charAt(0);
+		
+		for (int i = 0; i < word.length(); i++) {
+			aux = aux + grid[h - 1][w + 1];
+		}
 
-		if (aux == word) {
+		if (aux.equals(word)) {
 			return true;
 		} else {
 			return false;
@@ -113,10 +202,13 @@ public class CrossWord {
 	}
 
 	private boolean east(String word, int h, int w) {
-		String aux = "";
-		aux = aux + grid[h][w - 1];
+		String aux = ""+word.charAt(0);
+		
+		for (int i = 0; i < word.length(); i++) {
+			aux = aux + grid[h][w + 1];
+		}
 
-		if (aux == word) {
+		if (aux.equals(word)) {
 			return true;
 		} else {
 			return false;
@@ -124,10 +216,13 @@ public class CrossWord {
 	}
 
 	private boolean southEast(String word, int h, int w) {
-		String aux = "";
-		aux = aux + grid[h][w - 1];
+		String aux = ""+word.charAt(0);
+		
+		for (int i = 0; i < word.length(); i++) {
+			aux = aux + grid[h + 1][w - 1];
+		}
 
-		if (aux == word) {
+		if (aux.equals(word)) {
 			return true;
 		} else {
 			return false;
@@ -135,10 +230,13 @@ public class CrossWord {
 	}
 
 	private boolean south(String word, int h, int w) {
-		String aux = "";
-		aux = aux + grid[h][w - 1];
+		String aux = ""+word.charAt(0);
+		
+		for (int i = 0; i < word.length(); i++) {
+			aux = aux + grid[h + 1][w];
+		}
 
-		if (aux == word) {
+		if (aux.equals(word)) {
 			return true;
 		} else {
 			return false;
@@ -146,10 +244,13 @@ public class CrossWord {
 	}
 
 	private boolean southWest(String word, int h, int w) {
-		String aux = "";
-		aux = aux + grid[h][w - 1];
+		String aux = ""+word.charAt(0);
+		
+		for (int i = 0; i < word.length(); i++) {
+			aux = aux + grid[h + 1][w + 1];
+		}
 
-		if (aux == word) {
+		if (aux.equals(word)) {
 			return true;
 		} else {
 			return false;
